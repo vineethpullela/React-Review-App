@@ -5,36 +5,39 @@ class ReviewsCarousel extends Component {
   state = {review: 0}
 
   changePrevCount = () => {
-    this.setState(prevState => ({review: prevState.review + 1}))
+    const {review} = this.state
+    if (review !== 0) {
+      this.setState(prevState => ({review: prevState.review - 1}))
+    } else {
+      this.setState({review: 0})
+    }
   }
 
   changeNxtCount = () => {
-    this.setState(prevState => ({review: prevState.review - 1}))
-  }
-
-  getReview = reviewsList => {
     const {review} = this.state
-    const result = reviewsList[review]
-    return result
+    if (review !== 3) {
+      this.setState(prevState => ({review: prevState.review + 1}))
+    } else {
+      this.setState({review: 3})
+    }
   }
 
   render() {
+    const {review} = this.state
     const {reviewsList} = this.props
-    const resultReview = this.getReview(reviewsList)
+    console.log(review)
+    const {imgUrl, username, companyName, description} = reviewsList[review]
+
     return (
       <div className="bg-container">
         <div className="app-container">
           <h1 className="review-heading">Reviews</h1>
-          <img
-            src={resultReview.imgUrl}
-            alt={resultReview.username}
-            className="review-img"
-          />
+          <img src={imgUrl} alt={username} className="review-img" />
           <div className="arrow-name-container">
             <button
               className="button"
               type="button"
-              testId="leftArrow"
+              testid="leftArrow"
               onClick={this.changePrevCount}
             >
               <img
@@ -44,11 +47,11 @@ class ReviewsCarousel extends Component {
               />
             </button>
 
-            <p className="profile-name">{resultReview.username}</p>
+            <p className="profile-name">{username}</p>
             <button
-              className="button"
               type="button"
-              testId="rightArrow"
+              className="button"
+              testid="rightArrow"
               onClick={this.changeNxtCount}
             >
               <img
@@ -58,8 +61,8 @@ class ReviewsCarousel extends Component {
               />
             </button>
           </div>
-          <p className="review-company-name">{resultReview.companyName}</p>
-          <p className="review-text">{resultReview.description}</p>
+          <p className="review-company-name">{companyName}</p>
+          <p className="review-text">{description}</p>
         </div>
       </div>
     )
