@@ -1,68 +1,78 @@
 import {Component} from 'react'
+
 import './index.css'
 
 class ReviewsCarousel extends Component {
-  state = {review: 0}
+  state = {
+    activeReviewIndex: 0,
+  }
 
-  changePrevCount = () => {
-    const {review} = this.state
-    if (review !== 0) {
-      this.setState(prevState => ({review: prevState.review - 1}))
-    } else {
-      this.setState({review: 0})
+  onClickRightArrow = () => {
+    const {activeReviewIndex} = this.state
+    const {reviewsList} = this.props
+
+    if (activeReviewIndex < reviewsList.length - 1) {
+      this.setState(prevState => ({
+        activeReviewIndex: prevState.activeReviewIndex + 1,
+      }))
     }
   }
 
-  changeNxtCount = () => {
-    const {review} = this.state
-    if (review !== 3) {
-      this.setState(prevState => ({review: prevState.review + 1}))
-    } else {
-      this.setState({review: 3})
+  renderActiveReview = review => {
+    const {imgUrl, username, companyName, description} = review
+
+    return (
+      <div className="review-container">
+        <img src={imgUrl} alt={username} />
+        <p className="username">{username}</p>
+        <p className="company">{companyName}</p>
+        <p className="description">{description}</p>
+      </div>
+    )
+  }
+
+  onClickLeftArrow = () => {
+    const {activeReviewIndex} = this.state
+
+    if (activeReviewIndex > 0) {
+      this.setState(prevState => ({
+        activeReviewIndex: prevState.activeReviewIndex - 1,
+      }))
     }
   }
 
   render() {
-    const {review} = this.state
     const {reviewsList} = this.props
-    console.log(review)
-    const {imgUrl, username, companyName, description} = reviewsList[review]
+    const {activeReviewIndex} = this.state
+    const currentReviewDetails = reviewsList[activeReviewIndex]
 
     return (
-      <div className="bg-container">
-        <div className="app-container">
-          <h1 className="review-heading">Reviews</h1>
-          <img src={imgUrl} alt={username} className="review-img" />
-          <div className="arrow-name-container">
-            <button
-              className="button"
-              type="button"
-              testid="leftArrow"
-              onClick={this.changePrevCount}
-            >
-              <img
-                src="https://assets.ccbp.in/frontend/react-js/left-arrow-img.png"
-                alt="left arrow"
-                className="arrow-img"
-              />
-            </button>
-
-            <p className="profile-name">{username}</p>
-            <button
-              type="button"
-              className="button"
-              testid="rightArrow"
-              onClick={this.changeNxtCount}
-            >
-              <img
-                src="https://assets.ccbp.in/frontend/react-js/right-arrow-img.png "
-                alt="right arrow"
-                className="arrow-img"
-              />
-            </button>
-          </div>
-          <p className="review-company-name">{companyName}</p>
-          <p className="review-text">{description}</p>
+      <div className="app-container">
+        <h1 className="heading">Reviews</h1>
+        <div className="carousel-container">
+          <button
+            type="button"
+            onClick={this.onClickLeftArrow}
+            testid="leftArrow"
+            className="arrow-button"
+          >
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/left-arrow-img.png"
+              alt="left arrow"
+            />
+          </button>
+          {this.renderActiveReview(currentReviewDetails)}
+          <button
+            type="button"
+            onClick={this.onClickRightArrow}
+            testid="rightArrow"
+            className="arrow-button"
+          >
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/right-arrow-img.png"
+              alt="right arrow"
+            />
+          </button>
         </div>
       </div>
     )
